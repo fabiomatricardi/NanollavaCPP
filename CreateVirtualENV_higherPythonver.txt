@@ -1,0 +1,41 @@
+#How to create a venv with a different python version
+source: https://virtualenv.pypa.io/en/latest/user_guide.html
+
+---
+
+Here I have python 3.10
+that does not support steramlilt > 1.26.0
+
+So i use a Python embedded 3.11.7
+.\python3117pipReady\python.exe -m pip install virtualenv
+and then
+.\python3117pipReady\python.exe -m virtualenv venv
+```
+created virtual environment CPython3.11.7.final.0-64 in 9459ms
+  creator CPython3Windows(dest=C:\Users\FabioMatricardi\Documents\DEV\BESTSLM\NanollavaCPP\venv, clear=False, no_vcs_ignore=False, global=False)
+  seeder FromAppData(download=False, pip=bundle, setuptools=bundle, wheel=bundle, via=copy, app_data_dir=C:\Users\FabioMatricardi\AppData\Local\pypa\virtualenv)
+    added seed packages: pip==24.0, setuptools==69.5.1, wheel==0.43.0
+  activators BashActivator,BatchActivator,FishActivator,NushellActivator,PowerShellActivator,PythonActivator
+```
+
+to activate:
+```
+.\venv\Scripts\activate
+```
+
+
+## Quick start
+Create the environment (creates a folder in your current directory)
+```
+virtualenv env_name
+```
+In Linux or Mac, activate the new python environment
+```
+source env_name/bin/activate
+```
+Or in Windows
+```
+.\env_name\Scripts\activate
+```
+Confirm that the env is successfully selected
+`which python3`
