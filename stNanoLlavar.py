@@ -20,6 +20,16 @@ def image_to_base64_data_uri(file_path):
         base64_data = base64.b64encode(img_file.read()).decode('utf-8')
         return f"data:image/png;base64,{base64_data}"
     
+# FUNCTION TO LOG ALL CHAT MESSAGES INTO chathistory.txt
+def writehistory(text):
+    with open('chathistoryPhi3mini.txt', 'a', encoding='utf-8') as f:
+        f.write(text)
+        f.write('\n')
+    f.close()
+
+#AVATARS
+av_us = '🧑‍💻'  # './man.png'  #"🦖"  #A single emoji, e.g. "🧑‍💻", "🤖", "🦖". Shortcodes are not supported.
+av_ass = "🤖"   #'./robot.png'
 
 if "gentime" not in st.session_state:
     st.session_state.gentime = "**:green[none yet]**"
@@ -28,12 +38,16 @@ if "imagefile" not in st.session_state:
 if "keyimagefile" not in st.session_state:
     st.session_state.keyimagefile = 0     
 if "chatimage" not in st.session_state:
-    st.session_state.chatimage = 0      
-
+    st.session_state.chatimage = 0   
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []   
+if "chatUImessages" not in st.session_state:
+    st.session_state.chatUImessages = []   
 
 def main():
     st.set_page_config(layout="wide", page_title="AI Whisper Transcriber")
-    whisper = create_nanollava()
+    vllm = create_nanollava()
     st.write("# 🎙️✍️ Talk to your Images with nanollava\n\n\n")
     st.markdown('\n---\n', unsafe_allow_html=True)
     st.sidebar.write("## Upload an image :gear:")
@@ -66,12 +80,58 @@ def main():
         st.session_state.imagefile = file1.name
         st.toast('image file selected!', icon='🎉')
         time.sleep(1.2)
+        data_uri = image_to_base64_data_uri(st.session_state.imagefile)
         st.toast('Ready to **CHAT**', icon='📃')        
     if reset_btn:
         resetall()
 
     while st.session_state.chatimage:
-        pass
+        # Display chat messages from history on app rerun
+        for message in st.session_state.chatUImessages:
+            if message["role"] == "user":
+                with st.chat_message(message["role"],avatar=av_us):
+                    st.image(file1.name, width=350)
+                    st.markdown(message["content"])
+            else:
+                with st.chat_message(message["role"],avatar=av_ass):
+                    st.markdown(message["content"])
+        # Accept user input
+        if myprompt := st.chat_input("What is this?"):
+            # Add user message to chat history
+            messages = [
+                        {"role": "system", "content": "You are an assistant who perfectly describes images."},
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "image_url", "image_url": {"url": data_uri }},
+                                {"type" : "text", "text": myprompt}
+                            ]
+                        }
+                    ]
+            st.session_state.chatUImessages.append({"role": "user", "content": myprompt})
+            # Display user message in chat message container
+            with st.chat_message("user", avatar=av_us):
+                st.markdown(myprompt)
+                usertext = f"user: {myprompt}"
+                writehistory(usertext)
+                # Display assistant response in chat message container
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+                completion  =  vllm.create_chat_completion(messages=messages,  
+                                    stop=["###", "<|endoftext|>"],
+                                    max_tokens=350,
+                                    temperature=0.1,
+                                    repeat_penalty=1.2,
+                                    stream=True)
+                for chunk in completion:
+                    if chunk.choices[0].delta.content:
+                        full_response += chunk.choices[0].delta.content
+                        message_placeholder.markdown(full_response + "🟠")
+                message_placeholder.markdown(full_response)
+                asstext = f"assistant: {full_response}"
+                writehistory(asstext)       
+                st.session_state.chatUImessages.append({"role": "assistant", "content": full_response})
 
     if  not file1:
         message3.warning("  Upload an image", icon='⚠️')
