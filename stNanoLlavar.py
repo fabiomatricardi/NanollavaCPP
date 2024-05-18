@@ -15,9 +15,10 @@ def create_nanollava():
                 verbose=False
                 )
 
-def image_to_base64_data_uri(file_path):
-    with open(file_path, "rb") as img_file:
-        base64_data = base64.b64encode(img_file.read()).decode('utf-8')
+def image_to_base64_data_uri(stfileobj):
+    #with open(file_path, "rb") as img_file:
+        bytes_data = stfileobj.read()
+        base64_data = base64.b64encode(bytes_data).decode('utf-8')
         return f"data:image/png;base64,{base64_data}"
     
 # FUNCTION TO LOG ALL CHAT MESSAGES INTO chathistory.txt
@@ -77,7 +78,8 @@ def main():
 
     if file1:
         st.session_state.chatimage = 1
-        st.session_state.imagefile = file1.name
+        st.session_state.imagefile = file1
+        print(st.session_state.imagefile)
         st.toast('image file selected!', icon='🎉')
         time.sleep(1.2)
         data_uri = image_to_base64_data_uri(st.session_state.imagefile)
@@ -85,7 +87,7 @@ def main():
     if reset_btn:
         resetall()
 
-    while st.session_state.chatimage:
+    if st.session_state.chatimage:
         # Display chat messages from history on app rerun
         for message in st.session_state.chatUImessages:
             if message["role"] == "user":
@@ -96,7 +98,7 @@ def main():
                 with st.chat_message(message["role"],avatar=av_ass):
                     st.markdown(message["content"])
         # Accept user input
-        if myprompt := st.chat_input("What is this?"):
+        if myprompt := st.chat_input("What is this?",key=str(datetime.datetime.now())):
             # Add user message to chat history
             messages = [
                         {"role": "system", "content": "You are an assistant who perfectly describes images."},
