@@ -28,7 +28,7 @@ def create_nanollava():
     
 # FUNCTION TO LOG ALL CHAT MESSAGES INTO chathistory.txt
 def writehistory(text):
-    with open('chathistoryPhi3mini.txt', 'a', encoding='utf-8') as f:
+    with open('chathistoryNanoLlava.txt', 'a', encoding='utf-8') as f:
         f.write(text)
         f.write('\n')
     f.close()
