@@ -1,0 +1,21 @@
+user: what is this image about?
+user: what is this?
+user: describe the image
+user: describe this image
+user: describe this image
+user: describe the image
+assistant: 
+user: describe this image
+assistant: 
+user: describe the image
+assistant: 
+user: describe this image
+assistant: {'id': 'chatcmpl-5a26d39c-32c7-46e6-82af-cb4f7e5cbb78', 'object': 'chat.completion', 'created': 1716098007, 'model': 'nanolava/nanollava-text-model-f16.gguf', 'choices': [{'index': 0, 'message': {'role': 'assistant', 'content': '2013 photo of a basketball game. The player is wearing the number 45 on his jersey and has a tattoo on his arm. He\'s also holding onto a white basket with black trim in front of him, which he seems to be trying to pass over. His outfit includes a yellow shirt underneath a blue one that says "Jazz". There are two other players watching from the sidelines as well. The image captures an intense moment during the game where the player is attempting to make contact with his basket while also trying to avoid being seen by another player who has just made a move for him in front of them.'}, 'logprobs': None, 'finish_reason': 'stop'}], 'usage': {'prompt_tokens': 748, 'completion_tokens': 127, 'total_tokens': 875}}
+user: what is this image about?
+assistant: 2014 New York Knicks basketball game.
+user: what is the blue player doing?
+assistant: 1023854796
+user: how many players
+assistant: 2
+user: describe this image
+assistant: 2013 NBA Finals Game in Detroit, Michigan. A young man is trying to block a shot from the top of an air ball hoop while jumping into the air with his right foot raised off the ground and his left leg extended behind him. He's wearing a black and white striped shirt that has a red stripe down its center. The image captures the intensity and focus of the moment as he tries to make contact with the basketball, which is in mid-air above him.
