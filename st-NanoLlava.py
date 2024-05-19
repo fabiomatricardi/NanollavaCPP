@@ -3,12 +3,12 @@ from llama_cpp import Llama
 from llama_cpp.llama_chat_format import Llava15ChatHandler
 import datetime
 import os
-import time
+from time import sleep
 import base64
 from PIL import Image
 from io import BytesIO
 
-st.set_page_config(layout="wide", page_title="AI Whisper Transcriber")
+st.set_page_config(layout="wide", page_title="nanollava chat with your images")
 # Convert Image to Base64 
 def pil_2_b64(image):
     buff = BytesIO()
@@ -38,7 +38,7 @@ av_us = '🧑‍💻'  # './man.png'  #"🦖"  #A single emoji, e.g. "🧑‍�
 av_ass = "✨"   #'./robot.png'
 
 if "gentime" not in st.session_state:
-    st.session_state.gentime = "**:green[none yet]**"
+    st.session_state.gentime = "none yet"
 if "imagefile" not in st.session_state:
     st.session_state.imagefile = ''   
 if "keyimagefile" not in st.session_state:
@@ -55,12 +55,10 @@ if "uploadedImage" not in st.session_state:
 if "data_uri" not in st.session_state:
     st.session_state.data_uri = '' 
 
-
-
-vllm = create_nanollava()
 st.write("# 🖼️💬 Talk to your Images with nanollava\n\n\n")
 st.markdown('\n---\n', unsafe_allow_html=True)
 st.sidebar.image('logonanollava.jpg')
+vllm = create_nanollava()
 
 file1=None
 #image_btn = st.button('✨ **Start AI Magic**', type='primary')
@@ -77,7 +75,8 @@ st.sidebar.write("## Upload an image :gear:")
 st.markdown('\n\n')
 message1 = st.sidebar.empty()
 message11 = st.sidebar.empty()
-message2 = st.empty()
+message2 = st.sidebar.empty()
+message2.write(f'**:green[{st.session_state.gentime}]**')
 message3 = st.empty()
 
 # Upload the audio file
@@ -132,6 +131,7 @@ if file1:
             message_placeholder = st.empty()
             with st.spinner("Thinking..."):
                 full_response = ""
+                start = datetime.datetime.now()
                 completion  =  vllm.create_chat_completion(messages=st.session_state.messages,  
                                     stop=["###", "<|endoftext|>"],
                                     max_tokens=350,
@@ -139,16 +139,18 @@ if file1:
                                     repeat_penalty=1.2,
                                     #stream=True
                                     )
-    #            for chunk in completion:
-    #               print(chunk)
-    #               if chunk.choices[0].delta.content:
-    #                   full_response += chunk.choices[0].delta.content
-    #                    message_placeholder.markdown(full_response + "🟠")
-            message_placeholder.markdown(completion['choices'][0]['message']['content'])
-            print(completion['choices'][0]['message']['content'])
-            asstext = f"assistant: {completion['choices'][0]['message']['content']}"
+                st.session_state.gentime = datetime.datetime.now() - start
+                message2.write(f'**:green[{str(st.session_state.gentime)}]**') 
+                for chunk in  completion['choices'][0]['message']['content']:
+                    full_response += chunk
+                    message_placeholder.markdown(full_response + "🔷")
+                    sleep(0.013)
+
+            message_placeholder.markdown(full_response)
+            print(full_response)
+            asstext = f"assistant: {full_response}"
             writehistory(asstext)       
-            st.session_state.chatUImessages.append({"role": "assistant", "content": completion['choices'][0]['message']['content']})
+            st.session_state.chatUImessages.append({"role": "assistant", "content": full_response})
 
 if  not file1:
     message3.warning("  Upload an image", icon='⚠️')
