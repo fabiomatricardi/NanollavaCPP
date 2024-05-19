@@ -35,7 +35,7 @@ def writehistory(text):
 
 #AVATARS
 av_us = '🧑‍💻'  # './man.png'  #"🦖"  #A single emoji, e.g. "🧑‍💻", "🤖", "🦖". Shortcodes are not supported.
-av_ass = "🤖"   #'./robot.png'
+av_ass = "✨"   #'./robot.png'
 
 if "gentime" not in st.session_state:
     st.session_state.gentime = "**:green[none yet]**"
@@ -58,9 +58,10 @@ if "data_uri" not in st.session_state:
 
 
 vllm = create_nanollava()
-st.write("# 🎙️✍️ Talk to your Images with nanollava\n\n\n")
+st.write("# 🖼️💬 Talk to your Images with nanollava\n\n\n")
 st.markdown('\n---\n', unsafe_allow_html=True)
-st.sidebar.write("## Upload an image :gear:")
+st.sidebar.image('logonanollava.jpg')
+
 file1=None
 #image_btn = st.button('✨ **Start AI Magic**', type='primary')
 def resetall():
@@ -68,16 +69,16 @@ def resetall():
     # https://discuss.streamlit.io/t/clear-the-file-uploader-after-using-the-file-data/66178/4
     st.session_state.keyimagefile += 1
     st.session_state.chatimage = 0
+    st.session_state.chatUImessages = [{"role": "assistant", "content": "Hi there! I am here to assist you with this Image. What do you want to know?"}]
     st.rerun()
     
 reset_btn = st.sidebar.button('🧻✨ **Reset Image** ', type='primary')
+st.sidebar.write("## Upload an image :gear:")
 st.markdown('\n\n')
-message1 = st.empty()
-message11 = st.empty()
+message1 = st.sidebar.empty()
+message11 = st.sidebar.empty()
 message2 = st.empty()
 message3 = st.empty()
-audioplayer = st.empty()
-transcribed = st.empty()
 
 # Upload the audio file
 file1 = st.sidebar.file_uploader("Upload an image", 
@@ -90,6 +91,8 @@ if file1:
     st.session_state.imagefile = file1
     st.session_state.uploadedImage = Image.open(st.session_state.imagefile)
     message1.write('image file selected!')
+    # https://stackoverflow.com/questions/52411503/convert-image-to-base64-using-python-pil
+    # https://huggingface.co/docs/api-inference/detailed_parameters
     st.session_state.data_uri = pil_2_b64(st.session_state.uploadedImage)
     message11.write('Ready to **CHAT**')        
     if reset_btn:
