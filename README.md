@@ -2,6 +2,8 @@
 
 Learn how to run it with Llama.cpp
 
+<img src='https://github.com/fabiomatricardi/NanollavaCPP/raw/main/logonanollavaSocial.png' height=200>
+
 ---
 
 ### Dependencies
@@ -24,7 +26,7 @@ streamlit run st-NanoLlava.py
 ```
 
 <img src='https://github.com/fabiomatricardi/NanollavaCPP/raw/main/nanollavaStreamlit.gif' width=800>
-
+<br><br>
 
 
 
