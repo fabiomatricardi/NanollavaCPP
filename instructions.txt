@@ -1,5 +1,5 @@
 ➜ python -m venv venv
 ➜ venv\Scripts\activate
 (venv) ➜ NanollavaCPP ⚡
-install streamlit==1.34.0 openai llama-cpp-python==0.2.75
+pip install streamlit==1.34.0 openai llama-cpp-python==0.2.75
 
