@@ -1,0 +1,5 @@
+download here
+- nanollava-mmproj-f16.gguf
+- nanollava-text-model-f16.gguf
+
+from https://huggingface.co/abetlen/nanollava-gguf/tree/main
