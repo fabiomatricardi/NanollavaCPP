@@ -79,7 +79,7 @@ message2 = st.sidebar.empty()
 message2.write(f'**:green[{st.session_state.gentime}]**')
 message3 = st.empty()
 
-# Upload the audio file
+# Upload the image file
 file1 = st.sidebar.file_uploader("Upload an image", 
                                     type=["jpg", "png"],accept_multiple_files=False, 
                                     key=st.session_state.keyimagefile)
